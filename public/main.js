@@ -1,5 +1,13 @@
 console.log('sshhh');
 
+$('#create').on('click', function(evt){
+  var newSecret = {
+    message: $('#message').val(),
+  }
+  $.post('/secrets', newSecret, function(res){
+    console.log(res);
+  });
+})
 $('.like-btn').on('click', function(evt) {
   var $btn = $(evt.target);
   var id = $btn.data().id;
@@ -8,6 +16,17 @@ $('.like-btn').on('click', function(evt) {
     var secret = res.value;
     var html = render(secret);
     $btn.closest('.secret').html(html);
+  });
+});
+
+$('.remove-btn').on('click', function(evt){
+  var $btn = $(evt.target);
+  var id = $btn.data().id;
+  $.ajax({
+    url: '/secrets/' + id,
+    method: "DELETE"
+  }).then(function(res){
+    console.log(res);
   });
 });
 

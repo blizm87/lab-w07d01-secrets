@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var hbs  = require('express-handlebars');
-
+var secrets = require('./routes/secrets');
 // db
 var mongo = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
@@ -25,20 +25,7 @@ app.get('/', function(req, res) {
   });
 });
 
-app.post('/secrets/:id/likes', function(req, res) {
-  var id = req.params.id;
-  mongo.connect(url, function(err, db) {
-    db.collection(collection).findAndModify(
-      {_id: ObjectID(id)},
-      {},
-      {$inc: {likes: 1}},
-      {new: true},
-      function(err, result) {
-        db.close();
-        res.json(result);
-      });
-  });
-});
+app.use('/secrets', secrets);
 
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
